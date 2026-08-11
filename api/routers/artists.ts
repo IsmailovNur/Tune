@@ -7,23 +7,24 @@ artistsRouter.get('/', async (req, res) => {
   try {
     const artists = await Artist.find();
     res.send(artists);
-  } catch {
-    res.status(500);
+  } catch (e) {
+    return res.status(500).send({error: 'Server error!'});
   }
 });
 
 artistsRouter.post('/', async (req, res) => {
-  const {name, image, description} = req.body;
+  const {name, image, information} = req.body;
 
-  if (!name) res.status(400).send({error: 'name is required'});
-
-  const artist = new Artist({name, image, description,});
+  const artist = new Artist({name, image, information});
 
   try {
     await artist.save();
     res.send(artist);
   } catch (e) {
-    return res.status(500).send({ error: 'Server error!' });
+    if (e instanceof Error) {
+      return res.status(400).send({error: e.message});
+    }
+    return res.status(500).send({error: 'Server error!'});
   }
 });
 

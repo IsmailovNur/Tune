@@ -3,15 +3,35 @@ import { Album } from "../models/Album";
 
 const albumsRouter = Router();
 
-
 albumsRouter.get('/', async (req, res) => {
+  try {
+    const {artist} = req.query;
+
+    const filteredByArtist = artist ? {artist: artist as string} : {};
+
+    const albums = await Album.find(filteredByArtist).populate('artist');
+    return res.send(albums);
+  } catch (e) {
+    return res.status(500).send({error: 'Server error!'});
+  }
 });
 
 albumsRouter.get('/:id', async (req, res) => {
+  try {
+    const {id} = req.params;
+
+    const album = await Album.findById(id).populate('artist');
+
+    if (!album) return res.status(404).send({error: 'Album not found'});
+
+    return res.send(album);
+
+  } catch (e) {
+    return res.status(500).send({error: 'Server error!'});
+  }
 });
 
 albumsRouter.post('/', async (req, res) => {
-
   const {title, artist, releaseYear, coverImage} = req.body;
   const album = new Album({
     title,
