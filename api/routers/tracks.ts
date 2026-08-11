@@ -1,15 +1,24 @@
 import { Router } from "express";
 import { Track } from "../models/Track";
+import { Album } from "../models/Album";
 
 const tracksRouter = Router();
 
 tracksRouter.get('/', async (req, res) => {
   try {
-    const {album} = req.query;
+    const {album, artist} = req.query;
 
     const filterByAlbum = album ? {album: album as string} : {};
 
-    const tracks = await Track.find(filterByAlbum).populate('album');
+    if (artist) {
+      const albums = await Album.find({ artist: artist as string });
+      const albumIds = albums.map(a => a._id);
+
+      const tracks = await Track.find({ album: { $in: albumIds } }).populate('album', 'title');
+      return res.send(tracks);
+    }
+
+    const tracks = await Track.find(filterByAlbum).populate('album', 'title');
     return res.send(tracks);
   } catch (e) {
     return res.status(500).send({error: 'Server error!'});
