@@ -1,10 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import { IUser } from "../types";
 import { randomUUID } from "node:crypto";
 import { User } from "../models/User";
 import bcrypt from "bcrypt";
 
-const usersRouter = express.Router();
+const usersRouter = Router();
 
 usersRouter.post('/', async (req, res) => {
   const userData: IUser = {
@@ -27,24 +27,28 @@ usersRouter.post('/', async (req, res) => {
 });
 
 usersRouter.post('/sessions', async (req, res) => {
-  const user = await User.findOne({username: req.body.username});
+  try {
+    const user = await User.findOne({username: req.body.username});
 
-  if (!user) {
-    return res.status(400).send({error: 'invalid username!'});
+    if (!user) {
+      return res.status(400).send({error: 'invalid username!'});
+    }
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).send({error: 'invalid password!'});
+    }
+
+    user.token = randomUUID();
+    await user.save();
+    res.send({message: 'user logged in!', user});
+
+  } catch (e) {
+    if (e instanceof Error) {
+      return res.status(400).send({error: e.message});
+    }
+    return res.status(500).send({error: 'Server error!'});
   }
-  console.log(req.body.password)
-  console.log(user.password)
-  const isMatch = await bcrypt.compare(req.body.password, user.password);
-
-  if (!isMatch) {
-    return res.status(400).send({error: 'invalid password!'});
-  }
-
-  // user.token = randomUUID();
-  // user.save();
-  res.send({message: 'user logged in!', user});
-
-
 });
 
 export default usersRouter;

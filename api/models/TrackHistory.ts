@@ -1,8 +1,22 @@
-import { Router } from 'express';
+import { model, Schema, Types } from 'mongoose';
+import { ITrackHistory } from '../types';
 
-const trackHistoryRouter = Router();
-
-trackHistoryRouter.post('/', async (req, res) => {
+const TrackHistorySchema = new Schema<ITrackHistory>({
+  user: {
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  track: {
+    type: Types.ObjectId,
+    ref: 'Track',
+    required: true,
+  },
+  datetime: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
 });
 
-export default trackHistoryRouter;
+export const TrackHistory = model<ITrackHistory>('TrackHistory', TrackHistorySchema);
