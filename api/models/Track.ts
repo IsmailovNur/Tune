@@ -1,7 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 import { ITrack } from "../types";
 
-
 const TrackSchema = new Schema({
   title: {
     type: String,

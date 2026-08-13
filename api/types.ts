@@ -1,20 +1,32 @@
-import { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
-export interface IArtist extends Document {
+export interface IArtist {
   name: string;
   image?: string;
   information?: string;
 }
 
-export interface IAlbum extends Document {
+export interface IAlbum {
   title: string;
   artist: Types.ObjectId;
   releaseYear: number;
   coverImage?: string;
 }
 
-export interface ITrack extends Document {
+export interface ITrack {
   title: string;
   album: Types.ObjectId;
   duration: string;
+}
+
+export interface IUser {
+  username: string;
+  password: string;
+  token: string;
+}
+
+export interface ITrackHistory {
+  user: Types.ObjectId;
+  track: Types.ObjectId;
+  datetime: Date;
 }
