@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Album } from "../models/Album";
+import { upload } from "../multer";
 
 const albumsRouter = Router();
 
@@ -31,16 +32,16 @@ albumsRouter.get('/:id', async (req, res) => {
   }
 });
 
-albumsRouter.post('/', async (req, res) => {
-  const {title, artist, releaseYear, coverImage} = req.body;
-  const album = new Album({
-    title,
-    artist,
-    releaseYear,
-    coverImage: coverImage || null,
-  });
-
+albumsRouter.post('/', upload.single('coverImage'), async (req, res) => {
   try {
+    const {title, artist, releaseYear, coverImage} = req.body;
+    const album = new Album({
+      title,
+      artist,
+      releaseYear,
+      coverImage: req.file ? 'images/' + req.file.filename : null,
+    });
+
     await album.save();
     res.send(album);
 
