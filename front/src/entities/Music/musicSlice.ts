@@ -59,9 +59,16 @@ const musicSlice = createSlice({
       .addCase(fetchTracksByAlbum.rejected, (state) => {
         state.loading = false;
       })
+  },
 
+  selectors: {
+    artists: state => state.artists,
+    albums: state => state.albums,
+    tracks: state => state.tracks,
+    isLoading: state => state.loading,
   }
 })
 
 
 export const musicReducer = musicSlice.reducer;
+export const {artists, albums, tracks, isLoading} = musicSlice.selectors;

@@ -6,7 +6,7 @@ interface SpinnerProps {
   isLoading: boolean;
 }
 
-const Spinner: FC<SpinnerProps> = ({isLoading}) => {
+export const Spinner: FC<SpinnerProps> = ({isLoading}) => {
   return (
     <>
       {isLoading && <Box
@@ -28,5 +28,3 @@ const Spinner: FC<SpinnerProps> = ({isLoading}) => {
     </>
   );
 };
-
-export default Spinner;

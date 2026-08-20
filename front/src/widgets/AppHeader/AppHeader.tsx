@@ -1,23 +1,23 @@
-import { Container, Toolbar, Typography } from "@mui/material";
+import { Box, Container, Toolbar, Typography } from "@mui/material";
 import { Link } from 'react-router-dom';
 
 const AppHeader = () => {
 
   return (
-    <header>
+    <Box component="header" sx={{ mb: 2 }}>
       <Container maxWidth='lg'>
-        <Toolbar disableGutters>
+        <Toolbar disableGutters >
           <Typography
-            variant="h6"
+            variant="h4"
             component={Link}
             to="/"
             sx={{textDecoration: 'none', color: 'inherit', fontWeight: 'bold'}}
           >
-            Music App
+            Tune
           </Typography>
         </Toolbar>
       </Container>
-    </header>
+    </Box>
   );
 };
 

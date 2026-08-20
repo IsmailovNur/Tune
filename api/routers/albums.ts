@@ -18,7 +18,6 @@ albumsRouter.get('/', async (req, res) => {
     const albumsWithTrackCount = await Promise.all(
       albums.map(async (album) => {
         const count = await Track.countDocuments({album: album._id});
-        console.log(album);
         return {
           ...album.toObject(),
           tracksCount: count,

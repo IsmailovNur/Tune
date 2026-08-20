@@ -8,10 +8,10 @@ export interface Artist {
 export interface Album {
   _id: string;
   title: string;
-  artist: string;
+  artist: Artist;
   releaseYear: number;
   coverImage?: string;
-  tracksCount: number;
+  tracksCount?: number;
 }
 
 export interface Track {
@@ -19,5 +19,9 @@ export interface Track {
   title: string;
   duration: string;
   trackNumber: number;
-  album: string;
+  album: {
+    _id: string;
+    title: string;
+    artist: string;
+  };
 }

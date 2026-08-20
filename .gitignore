@@ -18,6 +18,9 @@ DS_Store
 api/db.json
 api/public/images/*
 
+front/public/images/*
+!front/public/images/no-image.webp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

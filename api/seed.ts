@@ -20,13 +20,11 @@ const run = async () => {
     {
       name: 'Taylor Swift',
       information: 'American singer-songwriter',
-      image: 'fixtures/taylor_swift.jpeg'
     },
 
     {
       name: 'The Weeknd',
       information: 'Canadian singer-songwriter',
-      image: 'fixtures/weeknd.jpeg'
     },
   ]);
 
@@ -35,28 +33,24 @@ const run = async () => {
       title: '1989 (Taylor\'s Version)',
       artist: artist1._id,
       releaseYear: 2023,
-      coverImage: 'fixtures/1989.jpeg'
     },
 
     {
       title: 'Midnights',
       artist: artist1._id,
       releaseYear: 2022,
-      coverImage: 'fixtures/midnights.jpeg'
     },
 
     {
       title: 'After Hours',
       artist: artist2._id,
       releaseYear: 2020,
-      coverImage: 'fixtures/after_hours.jpeg'
     },
 
     {
       title: 'Starboy',
       artist: artist2._id,
       releaseYear: 2016,
-      coverImage: 'fixtures/starboy.jpeg'
     },
   ]);
 
