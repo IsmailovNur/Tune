@@ -8,17 +8,24 @@ tracksRouter.get('/', async (req, res) => {
   try {
     const {album, artist} = req.query;
 
-    const filterByAlbum = album ? {album: album as string} : {};
+    if (album) {
+      const tracks = await Track.find({ album: album as string })
+        .sort({ trackNumber: 1 })
+        .populate('album', 'title');
+      return res.send(tracks);
+    }
 
     if (artist) {
       const albums = await Album.find({ artist: artist as string });
       const albumIds = albums.map(a => a._id);
 
-      const tracks = await Track.find({ album: { $in: albumIds } }).populate('album', 'title');
+      const tracks = await Track.find({ album: { $in: albumIds } })
+        .sort({ trackNumber: 1 })
+        .populate('album', 'title');
       return res.send(tracks);
     }
 
-    const tracks = await Track.find(filterByAlbum).populate('album', 'title');
+    const tracks = await Track.find().sort({ trackNumber: 1 }).populate('album', 'title');
     return res.send(tracks);
   } catch (e) {
     return res.status(500).send({error: 'Server error!'});

@@ -1,7 +1,7 @@
 import { model, Schema, Types } from "mongoose";
 import { ITrack } from "../types";
 
-const TrackSchema = new Schema({
+const TrackSchema = new Schema<ITrack>({
   title: {
     type: String,
     required: true,
@@ -13,6 +13,10 @@ const TrackSchema = new Schema({
   },
   duration: {
     type: String,
+    required: true,
+  },
+  trackNumber: {
+    type: Number,
     required: true,
   },
 })

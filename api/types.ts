@@ -17,6 +17,7 @@ export interface ITrack {
   title: string;
   album: Types.ObjectId;
   duration: string;
+  trackNumber: number;
 }
 
 export interface IUser {
