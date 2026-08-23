@@ -12,6 +12,11 @@ const TrackHistorySchema = new Schema<ITrackHistory>({
     ref: 'Track',
     required: true,
   },
+  artist: {
+    type: Types.ObjectId,
+    ref: 'Artist',
+    required: true,
+  },
   datetime: {
     type: Date,
     required: true,

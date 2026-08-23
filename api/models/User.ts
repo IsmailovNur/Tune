@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IUser } from "../types";
 import bcrypt from 'bcrypt';
+import { randomUUID } from "node:crypto";
 
 const SALT_WORK_FACTOR = 10;
 
@@ -26,6 +27,14 @@ UserSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+UserSchema.methods.checkPassword = function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.generateToken = function () {
+  this.token = randomUUID();
+};
 
 UserSchema.set('toJSON', {
   transform: (doc, ret: Partial<IUser>) => {

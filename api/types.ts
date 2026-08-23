@@ -24,10 +24,13 @@ export interface IUser {
   username: string;
   password: string;
   token: string;
+  checkPassword(password: string): Promise<boolean>;
+  generateToken(): void;
 }
 
 export interface ITrackHistory {
   user: Types.ObjectId;
   track: Types.ObjectId;
+  artist: Types.ObjectId;
   datetime: Date;
 }
