@@ -23,7 +23,7 @@ usersRouter.post('/', async (req, res) => {
   }
 });
 
-usersRouter.post('/sessions', async (req, res) => {
+usersRouter.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({username: req.body.username});
 
@@ -38,7 +38,7 @@ usersRouter.post('/sessions', async (req, res) => {
 
     user.generateToken();
     await user.save();
-    res.send({message: 'user logged in!', user});
+    res.send(user);
 
   } catch (e) {
     if (e instanceof Error) {

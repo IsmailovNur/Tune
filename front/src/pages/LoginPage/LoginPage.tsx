@@ -1,20 +1,28 @@
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import * as React from 'react';
 import { type ChangeEvent, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Box, Button, Link, Paper, TextField, Typography } from '@mui/material';
-import { registerUser } from "../../entities/User/userThunk.ts";
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { loginUser } from '../../entities/User/userThunk';
 import {
-  selectRegisterError,
-  selectRegisterLoading
-} from "../../entities/User/userSlice.ts";
+  selectLoginError,
+  selectLoginLoading
+} from '../../entities/User/userSlice';
+import {
+  Alert,
+  Box,
+  Button,
+  Link,
+  Paper,
+  TextField,
+  Typography
+} from '@mui/material';
 import { AppRoutes } from "../../routing/routes.ts";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-export const RegisterPage = () => {
+export const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const RegisterLoading = useAppSelector(selectRegisterLoading);
-  const RegisterError = useAppSelector(selectRegisterError);
+  const LoginLoading = useAppSelector(selectLoginLoading);
+  const LoginError = useAppSelector(selectLoginError);
 
   const [state, setState] = useState({
     username: '',
@@ -29,28 +37,25 @@ export const RegisterPage = () => {
   const submitHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
     try {
-      await dispatch(registerUser(state)).unwrap();
+      await dispatch(loginUser(state)).unwrap();
       navigate(AppRoutes.main);
     } catch (error) {
-      console.log('RegisterPage Error', error);
+      console.log('LoginPage Error', error);
     }
   };
-
-  const getFieldError = (fieldName: string) => {
-    try {
-      return RegisterError?.errors[fieldName].message;
-    } catch (error) {
-      return undefined;
-    }
-  }
+  console.log(LoginError);
 
   return (
     <Box sx={{maxWidth: 400, mx: 'auto', mt: 4}}>
       <Paper sx={{p: 4}} variant="outlined">
-
         <Typography variant="h5" align="center" sx={{mb: 4}}>
-          Sign Up
+          Sign In
         </Typography>
+        {LoginError && (
+          <Alert severity="error" sx={{mb: 2}}>
+            {LoginError.error}
+          </Alert>
+        )}
 
         <Box
           component="form"
@@ -63,8 +68,6 @@ export const RegisterPage = () => {
             name="username"
             value={state.username}
             onChange={inputChangeHandler}
-            error={Boolean(getFieldError('username'))}
-            helperText={getFieldError('username')}
           />
 
           <TextField
@@ -73,27 +76,25 @@ export const RegisterPage = () => {
             name="password"
             value={state.password}
             onChange={inputChangeHandler}
-            error={Boolean(getFieldError('password'))}
-            helperText={getFieldError('password')}
           />
 
           <Button
             type="submit"
             variant="contained"
-            loading={RegisterLoading}
+            loading={LoginLoading}
           >
-            Sign Up
+            Sign In
           </Button>
 
           <Typography variant="body2" sx={{textAlign: 'center'}}>
-            Already have an account?{' '}
+            Don't have an account?{' '}
             <Link
               component={RouterLink}
-              to={AppRoutes.login}
+              to={AppRoutes.register}
               underline="hover"
               sx={{cursor: 'pointer'}}
             >
-              Login now
+              Register now
             </Link>
           </Typography>
         </Box>
