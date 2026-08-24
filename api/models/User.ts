@@ -9,7 +9,14 @@ const UserSchema = new Schema<IUser>({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator: async (value: string): Promise<boolean> => {
+        const user = await User.findOne({username: value});
+        return !Boolean(user);
+      },
+      message: "Username already reistered!"
+    }
   },
   password: {
     type: String,

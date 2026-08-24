@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { User } from "../models/User";
+import mongoose from "mongoose";
 
 const usersRouter = Router();
 
@@ -15,8 +16,8 @@ usersRouter.post('/', async (req, res) => {
     res.send(user);
 
   } catch (e) {
-    if (e instanceof Error) {
-      return res.status(400).send({error: e.message});
+    if (e instanceof mongoose.Error.ValidationError) {
+      return res.status(400).send(e);
     }
     return res.status(500).send({error: 'Server error!'});
   }

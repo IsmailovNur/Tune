@@ -13,3 +13,15 @@ export interface LoginMutation {
   username: string;
   password: string;
 }
+
+export interface ValidationError {
+  errors: {
+    [key: string]: {
+      name: string;
+      message: string;
+    }
+  },
+  name: string;
+  message: string;
+  _message: string;
+}
