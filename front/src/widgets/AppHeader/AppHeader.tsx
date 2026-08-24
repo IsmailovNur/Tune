@@ -21,18 +21,17 @@ const AppHeader = () => {
             Tune
           </Typography>
 
-          <Button component={Link} to={AppRoutes.trackHistory} color="inherit">
-            Track History
-          </Button>
-
-          <Box>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {user ? (
-              <Box sx={{display: 'flex', alignItems: 'center', gap: 3, }}>
-                <Typography>Hello, {user.username}!</Typography>
+              <>
+                <Typography variant="body1">Hello, {user.username}!</Typography>
+                <Button component={Link} to={AppRoutes.trackHistory} color="inherit">
+                  Track History
+                </Button>
                 <Button color="inherit" onClick={() => dispatch(unsetUser())}>
                   Logout
                 </Button>
-              </Box>
+              </>
             ) : (
               <>
                 <Button component={Link} to={AppRoutes.login} color="inherit">

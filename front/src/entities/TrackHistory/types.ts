@@ -1,13 +1,13 @@
 export interface TrackHistory {
   _id: string;
   user: string;
-  tracks: {
+  track: {
     _id: string;
     title: string;
-  };
+  } | null;
   artist: {
     _id: string;
     name: string;
-  };
+  } | null;
   datetime: string;
 }

@@ -14,7 +14,6 @@ export const TrackHistoryPage = () => {
   const user = useAppSelector(selectUser);
   const history = useAppSelector(selectHistory);
   const loading = useAppSelector(selectHistoryLoading);
-
   useEffect(() => {
     if (!user) {
       navigate(AppRoutes.login);
@@ -37,7 +36,7 @@ export const TrackHistoryPage = () => {
             <div key={item._id}>
               <ListItem>
                 <ListItemText
-                  primary={`${item.artist?.name || 'Unknown Artist'} — ${item.tracks?.title || 'Unknown Track'}`}
+                  primary={`${item.artist?.name || 'Unknown Artist'} - ${item.track?.title || 'Unknown Track'}`}
                   secondary={new Date(item.datetime).toLocaleString()}
                 />
               </ListItem>
