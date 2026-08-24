@@ -7,6 +7,9 @@ import { AlbumsPage } from "../pages/AlbumsPage/AlbumsPage.tsx";
 import { TracksPage } from "../pages/TracksPage/TracksPage.tsx";
 import { RegisterPage } from "../pages/RegisterPage/RegisterPage.tsx";
 import { LoginPage } from "../pages/LoginPage/LoginPage.tsx";
+import {
+  TrackHistoryPage
+} from "../pages/TrackHistoryPage/TrackHistoryPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.login,
         element: <LoginPage />,
+      },
+      {
+        path: AppRoutes.trackHistory,
+        element: <TrackHistoryPage />,
       },
       {
         path: AppRoutes.notFound,

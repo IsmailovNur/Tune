@@ -11,11 +11,13 @@ const UserSchema = new Schema<IUser>({
     required: true,
     unique: true,
     validate: {
-      validator: async (value: string): Promise<boolean> => {
-        const user = await User.findOne({username: value});
+      validator: async function (this: any, value: string): Promise<boolean> {
+        if (!this.isModified('username')) return true;
+
+        const user = await User.findOne({ username: value });
         return !Boolean(user);
       },
-      message: "Username already reistered!"
+      message: "Username already registered!"
     }
   },
   password: {

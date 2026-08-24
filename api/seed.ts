@@ -3,6 +3,7 @@ import config from './config';
 import { Artist } from './models/Artist';
 import { Album } from './models/Album';
 import { Track } from './models/Track';
+import { User } from "./models/User";
 
 const run = async () => {
   await mongoose.connect(config.mongoDbUrl);
@@ -12,6 +13,7 @@ const run = async () => {
     await db.dropCollection('artists');
     await db.dropCollection('albums');
     await db.dropCollection('tracks');
+    await db.dropCollection('users');
   } catch {
     console.log('Collection were not present, skipping drop!');
   }
@@ -146,6 +148,12 @@ const run = async () => {
     {title: 'Reminders', album: album4._id, duration: '3:51', trackNumber: 4},
     {title: 'Rockin’', album: album4._id, duration: '3:52', trackNumber: 5},
   ]);
+
+  await User.create({
+    username: 'admin',
+    password: '1234',
+    token: crypto.randomUUID()
+  });
 
   console.log('Fixtures populated!');
   await db.close();

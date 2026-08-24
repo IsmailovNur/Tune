@@ -43,7 +43,6 @@ export const LoginPage = () => {
       console.log('LoginPage Error', error);
     }
   };
-  console.log(LoginError);
 
   return (
     <Box sx={{maxWidth: 400, mx: 'auto', mt: 4}}>
