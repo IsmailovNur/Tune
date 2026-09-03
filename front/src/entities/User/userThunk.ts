@@ -43,3 +43,10 @@ export const loginUser = createAsyncThunk<User, LoginMutation, {
     }
   }
 );
+
+export const logoutUser = createAsyncThunk<void>(
+  'user/logout',
+  async () => {
+    await axiosApi.delete('/users/logout');
+  }
+);

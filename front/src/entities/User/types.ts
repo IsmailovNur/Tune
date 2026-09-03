@@ -1,7 +1,10 @@
+export type UserRole = "admin" | "user";
+
 export interface User {
   _id: string;
   username: string;
   token: string;
+  role: UserRole;
 }
 
 export interface RegisterMutation {

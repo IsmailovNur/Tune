@@ -10,6 +10,11 @@ import { LoginPage } from "../pages/LoginPage/LoginPage.tsx";
 import {
   TrackHistoryPage
 } from "../pages/TrackHistoryPage/TrackHistoryPage.tsx";
+import {
+  CreateArtistPage
+} from "../pages/CreateArtistPage/CreateArtistPage.tsx";
+import { CreateAlbumPage } from "../pages/CreateAlbumPage/CreateAlbumPage.tsx";
+import { CreateTrackPage } from "../pages/CreateTrackPage/CreateTrackPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -28,16 +33,33 @@ export const router = createBrowserRouter([
         element: <TracksPage />,
       },
       {
+        path: AppRoutes.trackHistory,
+        element: <TrackHistoryPage />,
+      },
+
+
+      {
+        path: AppRoutes.createArtist,
+        element: <CreateArtistPage />,
+      },
+
+      {
+        path: AppRoutes.createAlbum,
+        element: <CreateAlbumPage />,
+      },
+
+      {
+        path: AppRoutes.createTrack,
+        element: <CreateTrackPage />,
+      },
+
+      {
         path: AppRoutes.register,
         element: <RegisterPage />,
       },
       {
         path: AppRoutes.login,
         element: <LoginPage />,
-      },
-      {
-        path: AppRoutes.trackHistory,
-        element: <TrackHistoryPage />,
       },
       {
         path: AppRoutes.notFound,

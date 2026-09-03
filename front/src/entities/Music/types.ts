@@ -1,8 +1,9 @@
 export interface Artist {
   _id: string;
   name: string;
-  image?: string;
-  information?: string;
+  image?: string | null;
+  information?: string | null;
+  isPublished: boolean;
 }
 
 export interface Album {
@@ -10,8 +11,9 @@ export interface Album {
   title: string;
   artist: Artist;
   releaseYear: number;
-  coverImage?: string;
+  coverImage?: string | null;
   tracksCount?: number;
+  isPublished: boolean;
 }
 
 export interface Track {
@@ -24,4 +26,25 @@ export interface Track {
     title: string;
     artist: string;
   };
+  isPublished: boolean;
+}
+
+export interface ArtistMutation {
+  name: string;
+  image: string;
+  information: string;
+}
+
+export interface AlbumMutation {
+  title: string;
+  artist: string;
+  releaseYear: number;
+  coverImage: File | null;
+}
+
+export interface TrackMutation {
+  title: string;
+  album: string;
+  duration: string;
+  trackNumber: number;
 }
