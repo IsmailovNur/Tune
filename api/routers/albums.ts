@@ -2,10 +2,14 @@ import { Router } from "express";
 import { Album } from "../models/Album";
 import { upload } from "../multer";
 import { Track } from "../models/Track";
+import { RequestWithUser } from "../types";
+import { auth } from "../middlewares/auth";
+import { Types } from "mongoose";
+import { permit } from "../middlewares/permit";
 
 const albumsRouter = Router();
 
-albumsRouter.get('/', async (req, res) => {
+albumsRouter.get('/', async (req: RequestWithUser, res) => {
   try {
     const {artist} = req.query;
 
@@ -44,9 +48,18 @@ albumsRouter.get('/:id', async (req, res) => {
   }
 });
 
-albumsRouter.post('/', upload.single('coverImage'), async (req, res) => {
+albumsRouter.post('/', auth, upload.single('coverImage'), async (req, res) => {
   try {
-    const {title, artist, releaseYear, coverImage} = req.body;
+    const {title, artist, releaseYear} = req.body;
+
+    if (typeof title !== "string" || !title.trim()) {
+      return res.status(400).send({error: "Album title is required!"});
+    }
+
+    if (typeof artist !== "string" || !artist.trim()) {
+      return res.status(400).send({error: "Artist is required!"});
+    }
+
     const album = new Album({
       title,
       artist,
@@ -64,5 +77,52 @@ albumsRouter.post('/', upload.single('coverImage'), async (req, res) => {
     return res.status(500).send({error: 'Server error!'});
   }
 });
+
+albumsRouter.delete('/:id', auth, permit("admin"), async (req: RequestWithUser, res) => {
+  try {
+    const {id} = req.params;
+
+    if (!Types.ObjectId.isValid(id as string)) {
+      return res.status(400).send({error: "Invalid album ID!"});
+    }
+
+    const album = await Album.findByIdAndDelete(id);
+
+    if (!album) {
+      return res.status(404).send({error: "Album not found!"});
+    }
+
+    return res.send({
+      message: "Album deleted!"
+    });
+
+  } catch (e) {
+    return res.status(500).send({error: "Server error!"});
+  }
+});
+
+albumsRouter.patch('/:id/togglePublished', auth, permit("admin"), async (req: RequestWithUser, res) => {
+  try {
+    const {id} = req.params;
+
+    if (!Types.ObjectId.isValid(id as string)) {
+      return res.status(400).send({error: "Invalid album ID!"});
+    }
+
+    const album = await Album.findById(id);
+
+    if (!album) {
+      return res.status(404).send({error: "Album not found!"});
+    }
+
+    album.isPublished = !album.isPublished;
+    await album.save();
+    return res.send(album);
+
+  } catch (e) {
+    return res.status(500).send({error: "Server error!"});
+  }
+})
+
 
 export default albumsRouter;

@@ -14,7 +14,12 @@ const ArtistSchema = new Schema<IArtist>({
   information: {
     type: String,
     default: null,
-  }
+  },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 export const Artist = model<IArtist>('Artist', ArtistSchema);

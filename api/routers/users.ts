@@ -1,14 +1,26 @@
 import { Router } from "express";
 import { User } from "../models/User";
 import mongoose from "mongoose";
+import { auth} from "../middlewares/auth";
+import { RequestWithUser } from "../types";
 
 const usersRouter = Router();
 
 usersRouter.post('/', async (req, res) => {
   try {
+    const {username, password} = req.body;
+
+    if (typeof username !== "string" || !username.trim()) {
+      return res.status(400).send({error: "Username is required!"});
+    }
+
+    if (typeof password !== "string" || !password.trim()) {
+      return res.status(400).send({error: "Password is required!"});
+    }
+
     const user = new User({
-      username: req.body.username,
-      password: req.body.password,
+      username: username.trim(),
+      password,
     });
 
     user.generateToken();
@@ -23,14 +35,28 @@ usersRouter.post('/', async (req, res) => {
   }
 });
 
+
 usersRouter.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({username: req.body.username});
+    const {username, password} = req.body;
+
+    if (typeof username !== "string" || !username.trim()) {
+      return res.status(400).send({error: "Username is required!"});
+    }
+
+    if (typeof password !== "string" || !password.trim()) {
+      return res.status(400).send({error: "Password is required!"});
+    }
+
+    const user = await User.findOne({
+      username: username.trim()
+    });
 
     if (!user) {
       return res.status(400).send({error: 'invalid username!'});
     }
-    const isMatch = await user.checkPassword(req.body.password);
+
+    const isMatch = await user.checkPassword(password);
 
     if (!isMatch) {
       return res.status(400).send({error: 'invalid password!'});
@@ -47,6 +73,20 @@ usersRouter.post('/login', async (req, res) => {
     return res.status(500).send({error: 'Server error!'});
   }
 });
+
+usersRouter.delete('/logout', auth, async (req: RequestWithUser, res) => {
+  try {
+    req.user!.generateToken();
+    await req.user!.save();
+
+    return res.send({
+      message: "Logged out successfully!"
+    });
+  } catch (e) {
+    return res.status(500).send({error: "Server error!"});
+  }
+});
+
 
 export default usersRouter;
 

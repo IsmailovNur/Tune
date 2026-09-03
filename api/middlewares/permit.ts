@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
-import { RequestWithUser } from "./auth";
+import { RequestWithUser, Role } from "../types";
 
-export const permit = (...roles: string[]) => {
+export const permit = (...roles: Role[]) => {
   return (req: RequestWithUser, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).send({error: 'Unauthenticated'});

@@ -3,27 +3,22 @@ import { User } from "../models/User";
 import { Track } from "../models/Track";
 import { TrackHistory } from "../models/TrackHistory";
 import { Album } from "../models/Album";
+import { auth } from "../middlewares/auth";
+import { Types } from "mongoose";
+import { RequestWithUser } from "../types";
 
 const trackHistoryRouter = Router();
 
-trackHistoryRouter.post('/', async (req, res) => {
+trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res) => {
   try {
-    const token = req.get('Authorization');
-
-    if (!token) {
-      return res.status(401).send({error: 'No token present!'});
-    }
-
-    const user = await User.findOne({token});
-
-    if (!user) {
-      return res.status(401).send({error: 'Wrong token!'});
-    }
-
     const {track} = req.body;
 
-    if (!track) {
+    if (typeof track !== "string" || !track.trim()) {
       return res.status(400).send({error: 'Track ID is required!'});
+    }
+
+    if (!Types.ObjectId.isValid(track)) {
+      return res.status(400).send({error: 'Invalid track ID!'});
     }
 
     const existingTrack = await Track.findById(track);
@@ -39,47 +34,46 @@ trackHistoryRouter.post('/', async (req, res) => {
     }
 
     const trackHistoryData = {
-      user: user._id,
+      user: req.user!._id,
       track: existingTrack._id,
       artist: album.artist,
-    }
+    };
 
     const trackHistory = new TrackHistory(trackHistoryData);
     await trackHistory.save();
-
     return res.send(trackHistory);
+
   } catch (e) {
     if (e instanceof Error) {
       return res.status(400).send({error: e.message});
     }
+
     return res.status(500).send({error: 'Server error!'});
   }
 });
 
-trackHistoryRouter.get('/', async (req, res) => {
+trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res) => {
   try {
-    const token = req.get('Authorization');
-    if (!token) {
-      res.status(401).send({error: 'Unauthorized: No token provided'});
-      return;
-    }
-
-    const user = await User.findOne({token});
-    if (!user) {
-      res.status(401).send({error: 'Unauthorized: Invalid token'});
-      return;
-    }
-
-    const history = await TrackHistory.find({user: user._id})
+    const history = await TrackHistory.find({
+      user: req.user!._id
+    })
       .sort({datetime: -1})
-      .populate({path: 'track', select: 'title'})
-      .populate({path: 'artist', select: 'name'});
+      .populate({
+        path: 'track',
+        select: 'title'
+      })
+      .populate({
+        path: 'artist',
+        select: 'name'
+      });
 
     res.send(history);
+
   } catch (e) {
     if (e instanceof Error) {
       return res.status(400).send({error: e.message});
     }
+
     return res.status(500).send({error: 'Server error!'});
   }
 });

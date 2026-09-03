@@ -1,9 +1,13 @@
-import { Types } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+import { Request } from "express";
+
+export type Role = "admin" | "user";
 
 export interface IArtist {
   name: string;
   image?: string;
   information?: string;
+  isPublished: boolean;
 }
 
 export interface IAlbum {
@@ -11,6 +15,7 @@ export interface IAlbum {
   artist: Types.ObjectId;
   releaseYear: number;
   coverImage?: string;
+  isPublished: boolean;
 }
 
 export interface ITrack {
@@ -18,15 +23,22 @@ export interface ITrack {
   album: Types.ObjectId;
   duration: string;
   trackNumber: number;
+  isPublished: boolean;
 }
 
 export interface IUser {
   username: string;
   password: string;
   token: string;
-  role: "admin" | "user";
+  role: Role;
+
   checkPassword(password: string): Promise<boolean>;
+
   generateToken(): void;
+}
+
+export interface RequestWithUser extends Request {
+  user?: HydratedDocument<IUser>;
 }
 
 export interface ITrackHistory {

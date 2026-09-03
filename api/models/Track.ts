@@ -19,6 +19,11 @@ const TrackSchema = new Schema<ITrack>({
     type: Number,
     required: true,
   },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 })
 
 export const Track = model<ITrack>('Track', TrackSchema);

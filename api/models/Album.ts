@@ -18,7 +18,12 @@ const AlbumSchema = new Schema<IAlbum>({
   coverImage: {
     type: String,
     default: null,
-  }
+  },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 

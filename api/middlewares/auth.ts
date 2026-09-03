@@ -1,23 +1,25 @@
-import { NextFunction, Request, Response } from 'express';
-import { HydratedDocument } from "mongoose";
-import { IUser } from "../types";
+import { NextFunction, Response } from 'express';
+import { RequestWithUser } from "../types";
 import { User } from "../models/User";
 
-export interface RequestWithUser extends Request {
-  user?: HydratedDocument<IUser>;
-};
 
 export const auth = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-  const token = req.get("Authorization");
-  if (!token) {
-    return res.status(401).json({error: "No token provided!"});
-  }
+  try {
+    const token = req.get("Authorization")?.trim();
 
-  const user = await User.findOne({token});
-  if (!user) {
-    return res.status(401).json({error: "Unauthorized: Invalid token!"});
-  }
+    if (!token) {
+      return res.status(401).json({error: "No token provided!"});
+    }
 
-  req.user = user;
-  next();
+    const user = await User.findOne({token});
+    if (!user) {
+      return res.status(401).json({error: "Unauthorized: Invalid token!"});
+    }
+
+    req.user = user;
+    next();
+
+  } catch (err) {
+    return res.status(500).send({error: "Server error!"});
+  }
 };
