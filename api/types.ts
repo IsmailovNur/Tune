@@ -5,7 +5,7 @@ export type Role = "admin" | "user";
 
 export interface IArtist {
   name: string;
-  image?: string;
+  image?: string | null;
   information?: string;
   isPublished: boolean;
 }
@@ -14,7 +14,7 @@ export interface IAlbum {
   title: string;
   artist: Types.ObjectId;
   releaseYear: number;
-  coverImage?: string;
+  coverImage?: string | null;
   isPublished: boolean;
 }
 

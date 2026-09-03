@@ -1,14 +1,14 @@
 import { Router } from "express";
 import { Track } from "../models/Track";
 import { Album } from "../models/Album";
-import { auth } from "../middlewares/auth";
+import { auth, authOptional } from "../middlewares/auth";
 import { RequestWithUser } from "../types";
 import { Types } from "mongoose";
 import { permit } from "../middlewares/permit";
 
 const tracksRouter = Router();
 
-tracksRouter.get('/', async (req, res) => {
+tracksRouter.get('/', authOptional, async (req, res) => {
   try {
     const {album, artist} = req.query;
 

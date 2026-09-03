@@ -3,13 +3,13 @@ import { Album } from "../models/Album";
 import { upload } from "../multer";
 import { Track } from "../models/Track";
 import { RequestWithUser } from "../types";
-import { auth } from "../middlewares/auth";
+import { auth, authOptional } from "../middlewares/auth";
 import { Types } from "mongoose";
 import { permit } from "../middlewares/permit";
 
 const albumsRouter = Router();
 
-albumsRouter.get('/', async (req: RequestWithUser, res) => {
+albumsRouter.get('/', authOptional, async (req: RequestWithUser, res) => {
   try {
     const {artist} = req.query;
 
@@ -35,7 +35,7 @@ albumsRouter.get('/', async (req: RequestWithUser, res) => {
   }
 });
 
-albumsRouter.get('/:id', async (req, res) => {
+albumsRouter.get('/:id', authOptional, async (req, res) => {
   try {
     const {id} = req.params;
     const album = await Album.findById(id).populate('artist', 'name');

@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { Artist } from "../models/Artist";
 import { RequestWithUser } from "../types";
-import { auth } from "../middlewares/auth";
+import { auth, authOptional } from "../middlewares/auth";
 import { permit } from "../middlewares/permit";
 import { Types } from "mongoose";
 
 const artistsRouter = Router();
 
-artistsRouter.get('/', async (req: RequestWithUser, res) => {
+artistsRouter.get('/', authOptional, async (req: RequestWithUser, res) => {
   try {
     const filter = req.user?.role === "admin" ? {} : {isPublished: true};
 

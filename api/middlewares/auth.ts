@@ -23,3 +23,22 @@ export const auth = async (req: RequestWithUser, res: Response, next: NextFuncti
     return res.status(500).send({error: "Server error!"});
   }
 };
+
+export const authOptional = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  try {
+    const token = req.get("Authorization")?.trim();
+
+    if (token) {
+      const user = await User.findOne({token});
+
+      if (user) {
+        req.user = user;
+      }
+    }
+
+    next();
+
+  } catch (e) {
+    return res.status(500).send({error: "Server error!"});
+  }
+};

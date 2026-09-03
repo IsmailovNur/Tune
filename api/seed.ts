@@ -5,6 +5,7 @@ import { Album } from './models/Album';
 import { Track } from './models/Track';
 import { User } from "./models/User";
 import { TrackHistory } from "./models/TrackHistory";
+import { randomUUID } from "node:crypto";
 
 const run = async () => {
   await mongoose.connect(config.mongoDbUrl);
@@ -20,21 +21,31 @@ const run = async () => {
     console.log('Collection were not present, skipping drop!');
   }
 
-  const [artist1, artist2] = await Artist.create([
+  const [artist1, artist2, artist3] = await Artist.create([
     {
       name: 'Taylor Swift',
       information: 'American singer-songwriter',
-      image: 'images/Taylor_Swift.webp'
+      image: 'images/Taylor_Swift.webp',
+      isPublished: true,
     },
 
     {
       name: 'The Weeknd',
       information: 'Canadian singer-songwriter',
-      image: 'images/The_Weeknd.jpg'
+      image: 'images/The_Weeknd.jpg',
+      isPublished: true,
+    },
+
+    {
+      name: 'Test Artist',
+      information: 'Test Artist infromation',
+      image: null,
+      isPublished: false,
     },
   ]);
 
-  const [album1, album2, album3, album4] = await Album.create([
+
+  const [album1, album2, album3, album4, unpublishedAlbum] = await Album.create([
     {
       title: '1989 (Taylor\'s Version)',
       artist: artist1._id,
@@ -62,6 +73,14 @@ const run = async () => {
       releaseYear: 2016,
       coverImage: 'images/The_Weeknd-Starboy.png'
     },
+
+    {
+      title: 'Unpublished Album',
+      artist: artist3._id,
+      releaseYear: 2026,
+      coverImage: null,
+      isPublished: false,
+    },
   ]);
 
   const [
@@ -74,103 +93,149 @@ const run = async () => {
       title: 'Welcome to New York',
       album: album1._id,
       duration: '3:32',
-      trackNumber: 1
+      trackNumber: 1,   isPublished: true,
     },
-    {title: 'Blank Space', album: album1._id, duration: '3:51', trackNumber: 2},
-    {title: 'Style', album: album1._id, duration: '3:51', trackNumber: 3},
+    {title: 'Blank Space', album: album1._id, duration: '3:51', trackNumber: 2,   isPublished: true,},
+    {title: 'Style', album: album1._id, duration: '3:51', trackNumber: 3,   isPublished: true,},
     {
       title: 'Out of the Woods',
       album: album1._id,
       duration: '3:55',
-      trackNumber: 4
+      trackNumber: 4,
+         isPublished: true,
     },
     {
       title: 'Shake It Off',
       album: album1._id,
       duration: '3:39',
-      trackNumber: 5
+      trackNumber: 5,
+         isPublished: true,
     },
 
     {
       title: 'Lavender Haze',
       album: album2._id,
       duration: '3:22',
-      trackNumber: 1
+      trackNumber: 1,
+         isPublished: true,
     },
-    {title: 'Maroon', album: album2._id, duration: '3:38', trackNumber: 2},
-    {title: 'Anti-Hero', album: album2._id, duration: '3:20', trackNumber: 3},
+    {title: 'Maroon', album: album2._id, duration: '3:38', trackNumber: 2,    isPublished: true,},
+    {title: 'Anti-Hero', album: album2._id, duration: '3:20', trackNumber: 3,    isPublished: true,},
     {
       title: 'Snow on the Beach',
       album: album2._id,
       duration: '4:16',
-      trackNumber: 4
+      trackNumber: 4,
+         isPublished: true,
     },
     {
       title: 'You are on Your Own, Kid',
       album: album2._id,
       duration: '3:14',
-      trackNumber: 5
+      trackNumber: 5,
+         isPublished: true,
     },
 
-    {title: 'Alone Again', album: album3._id, duration: '4:10', trackNumber: 1},
-    {title: 'Too Late', album: album3._id, duration: '3:59', trackNumber: 2},
+    {title: 'Alone Again', album: album3._id, duration: '4:10', trackNumber: 1,   isPublished: true,},
+    {title: 'Too Late', album: album3._id, duration: '3:59', trackNumber: 2,   isPublished: true,},
     {
       title: 'Hardest to Love',
       album: album3._id,
       duration: '3:31',
-      trackNumber: 3
+      trackNumber: 3,
+      isPublished: true,
     },
     {
       title: 'Scared to Live',
       album: album3._id,
       duration: '3:11',
-      trackNumber: 4
+      trackNumber: 4,
+      isPublished: true,
     },
     {
       title: 'Blinding Lights',
       album: album3._id,
       duration: '3:20',
-      trackNumber: 5
+      trackNumber: 5,
+      isPublished: true,
     },
 
-    {title: 'Starboy', album: album4._id, duration: '3:50', trackNumber: 1},
+    {title: 'Starboy', album: album4._id, duration: '3:50', trackNumber: 1,   isPublished: true,},
     {
       title: 'Party Monster',
       album: album4._id,
       duration: '4:09',
-      trackNumber: 2
+      trackNumber: 2,
+      isPublished: true,
     },
-    {title: 'False Alarm', album: album4._id, duration: '3:40', trackNumber: 3},
-    {title: 'Reminders', album: album4._id, duration: '3:51', trackNumber: 4},
-    {title: 'Rockin’', album: album4._id, duration: '3:52', trackNumber: 5},
+    {title: 'False Alarm', album: album4._id, duration: '3:40', trackNumber: 3,    isPublished: true,},
+    {title: 'Reminders', album: album4._id, duration: '3:51', trackNumber: 4,    isPublished: true,},
+    {title: 'Rockin’', album: album4._id, duration: '3:52', trackNumber: 5,    isPublished: true,},
+
+    {
+      title: 'Unpublished 1',
+      album: unpublishedAlbum._id,
+      duration: '3:20',
+      trackNumber: 1,
+      isPublished: false,
+    },
+    {
+      title: 'Unpublished 2',
+      album: unpublishedAlbum._id,
+      duration: '3:30',
+      trackNumber: 2,
+      isPublished: false,
+    },
+    {
+      title: 'Unpublished 3',
+      album: unpublishedAlbum._id,
+      duration: '3:40',
+      trackNumber: 3,
+      isPublished: false,
+    },
   ]);
 
-  const user = await User.create({
-    username: 'admin',
-    password: '1234',
-    token: crypto.randomUUID()
+  await User.create([
+    {
+      username: 'admin',
+      password: '1234',
+      role: 'admin',
+      token: randomUUID(),
+    },
+    {
+      username: 'user',
+      password: '1234',
+      role: 'user',
+      token: randomUUID(),
+    },
+  ]);
+
+  const admin = await User.findOne({
+    username: 'admin'
   });
 
-  await TrackHistory.create([
-    {
-      user: user._id,
-      track: track15._id,
-      artist: artist2._id,
-      datetime: new Date('2026-08-24T10:15:00.000Z'),
-    },
-    {
-      user: user._id,
-      track: track2._id,
-      artist: artist1._id,
-      datetime: new Date('2026-08-24T11:30:00.000Z'),
-    },
-    {
-      user: user._id,
-      track: track8._id,
-      artist: artist1._id,
-      datetime: new Date('2026-08-24T14:45:00.000Z'),
-    },
-  ]);
+  if (admin) {
+    await TrackHistory.create([
+      {
+        user: admin._id,
+        track: track15._id,
+        artist: artist2._id,
+        datetime: new Date('2026-08-24T10:15:00.000Z'),
+      },
+      {
+        user: admin._id,
+        track: track2._id,
+        artist: artist1._id,
+        datetime: new Date('2026-08-24T11:30:00.000Z'),
+      },
+      {
+        user: admin._id,
+        track: track8._id,
+        artist: artist1._id,
+        datetime: new Date('2026-08-24T14:45:00.000Z'),
+      },
+    ]);
+  }
 
   console.log('Fixtures populated!');
   await db.close();

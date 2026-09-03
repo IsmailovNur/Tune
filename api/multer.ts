@@ -2,6 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import config from "./config";
 import { promises as fs } from 'fs';
+import { randomUUID } from "node:crypto";
 
 const imageStorage = multer.diskStorage({
   destination: async (_req, _file, cb) => {
@@ -12,7 +13,7 @@ const imageStorage = multer.diskStorage({
 
   filename: (_req, file, cb) => {
     const extension = path.extname(file.originalname);
-    cb(null, crypto.randomUUID() + extension);
+    cb(null, randomUUID() + extension);
   },
 });
 
