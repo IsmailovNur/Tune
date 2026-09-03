@@ -3,8 +3,9 @@ import { createRoot } from "react-dom/client";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { persistor, store } from "./app/store";
 import App from "./App.tsx";
+import { PersistGate } from "redux-persist/integration/react";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,8 +16,10 @@ const darkTheme = createTheme({
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider theme={darkTheme}>
     <Provider store={store}>
-      <CssBaseline />
-      <App/>
+      <PersistGate loading={null} persistor={persistor}>
+        <CssBaseline />
+        <App />
+      </PersistGate>
     </Provider>
   </ThemeProvider>
 );

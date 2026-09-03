@@ -30,7 +30,7 @@ export const AlbumsPage = () => {
   }, [dispatch, artistId]);
 
   if (loading) return <Spinner isLoading />;
-  const artistName = albumsData[0]?.artist?.name ?? 'Артист';
+  const artistName = albumsData[0]?.artist?.name ?? 'Artist';
 
   return (
     <Box>

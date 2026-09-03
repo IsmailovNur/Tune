@@ -24,6 +24,7 @@ export interface IUser {
   username: string;
   password: string;
   token: string;
+  role: "admin" | "user";
   checkPassword(password: string): Promise<boolean>;
   generateToken(): void;
 }
