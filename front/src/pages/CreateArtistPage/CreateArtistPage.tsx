@@ -13,7 +13,7 @@ export const CreateArtistPage = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [state, setState] = useState({
+  const [artist, setArtist] = useState({
     name: "",
     image: "",
     information: "",
@@ -22,13 +22,13 @@ export const CreateArtistPage = () => {
   const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
 
-    setState((prev) => ({...prev, [name]: value}));
+    setArtist((prev) => ({...prev, [name]: value}));
   }
 
   const submitHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    if (!state.name.trim()) {
+    if (!artist.name.trim()) {
       toast.error("Artist name is required!");
       return;
     }
@@ -36,7 +36,7 @@ export const CreateArtistPage = () => {
     setLoading(true);
 
     try {
-      await dispatch(createArtist(state)).unwrap();
+      await dispatch(createArtist(artist)).unwrap();
 
       toast.success("Artist created!");
 
@@ -67,21 +67,21 @@ export const CreateArtistPage = () => {
           <TextField
             label="Name"
             name="name"
-            value={state.name}
+            value={artist.name}
             onChange={inputChangeHandler}
           />
 
           <TextField
             label="Image"
             name="image"
-            value={state.image}
+            value={artist.image}
             onChange={inputChangeHandler}
           />
 
           <TextField
             label="Information"
             name="information"
-            value={state.information}
+            value={artist.information}
             onChange={inputChangeHandler}
             multiline
             rows={4}
