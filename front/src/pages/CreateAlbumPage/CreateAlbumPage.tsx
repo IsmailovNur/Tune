@@ -36,9 +36,6 @@ export const CreateAlbumPage = () => {
   }, [dispatch])
 
 
-  console.log(artistsData);
-
-
   const submitHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
 

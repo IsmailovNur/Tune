@@ -2,10 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { useNavigate } from "react-router-dom";
 import React, { type ChangeEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  createTrack,
-  fetchAlbumsByArtist
-} from "../../entities/Music/musicThunk.ts";
+import { createTrack, fetchAlbums } from "../../entities/Music/musicThunk.ts";
 import { AppRoutes } from "../../routing/routes.ts";
 import { albums } from "../../entities/Music/musicSlice.ts";
 import {
@@ -25,8 +22,6 @@ export const CreateTrackPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const albumsData = useAppSelector(albums);
-  console.log(albumsData);
 
   const [track, setTrack] = useState({
     title: "",
@@ -36,8 +31,12 @@ export const CreateTrackPage = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchAlbumsByArtist(""));
+    dispatch(fetchAlbums());
   }, [dispatch]);
+
+  const albumsData = useAppSelector(albums);
+  console.log(albumsData);
+
 
   const submitHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -141,7 +140,7 @@ export const CreateTrackPage = () => {
                     justifyContent: "space-between"
                   }}>
                     <Typography>{album.title}</Typography>
-                    <Typography color="info">{album!.artist.name}</Typography>
+                    <Typography color="info">{album.artist.name}</Typography>
                   </Box>
                 </MenuItem>
               ))}

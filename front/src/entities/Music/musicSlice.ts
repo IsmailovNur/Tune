@@ -1,6 +1,7 @@
 import type { Album, Artist, Track } from "./types.ts";
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  fetchAlbums,
   fetchAlbumsByArtist,
   fetchArtists,
   fetchTracksByAlbum
@@ -57,6 +58,17 @@ const musicSlice = createSlice({
         state.tracks = action.payload;
       })
       .addCase(fetchTracksByAlbum.rejected, (state) => {
+        state.loading = false;
+      })
+
+      .addCase(fetchAlbums.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAlbums.fulfilled, (state, action) => {
+        state.loading = false;
+        state.albums = action.payload;
+      })
+      .addCase(fetchAlbums.rejected, (state) => {
         state.loading = false;
       })
   },
