@@ -4,7 +4,10 @@ import {
   fetchAlbums,
   fetchAlbumsByArtist,
   fetchArtists,
-  fetchTracksByAlbum
+  fetchTracksByAlbum,
+  deleteArtist,
+  deleteAlbum,
+  deleteTrack
 } from "./musicThunk.ts";
 
 interface MusicState {
@@ -19,17 +22,17 @@ const initialState: MusicState = {
   albums: [],
   tracks: [],
   loading: false,
-}
+};
 
 const musicSlice = createSlice({
   name: 'music',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-
     builder
       .addCase(fetchArtists.pending, (state) => {
         state.loading = true;
+        state.artists = [];
       })
       .addCase(fetchArtists.fulfilled, (state, action) => {
         state.loading = false;
@@ -41,6 +44,7 @@ const musicSlice = createSlice({
 
       .addCase(fetchAlbumsByArtist.pending, (state) => {
         state.loading = true;
+        state.albums = [];
       })
       .addCase(fetchAlbumsByArtist.fulfilled, (state, action) => {
         state.loading = false;
@@ -52,6 +56,7 @@ const musicSlice = createSlice({
 
       .addCase(fetchTracksByAlbum.pending, (state) => {
         state.loading = true;
+        state.tracks = [];
       })
       .addCase(fetchTracksByAlbum.fulfilled, (state, action) => {
         state.loading = false;
@@ -63,6 +68,7 @@ const musicSlice = createSlice({
 
       .addCase(fetchAlbums.pending, (state) => {
         state.loading = true;
+        state.albums = [];
       })
       .addCase(fetchAlbums.fulfilled, (state, action) => {
         state.loading = false;
@@ -71,6 +77,19 @@ const musicSlice = createSlice({
       .addCase(fetchAlbums.rejected, (state) => {
         state.loading = false;
       })
+
+      .addCase(deleteArtist.fulfilled, (state) => {
+        state.albums = [];
+        state.tracks = [];
+      })
+
+      .addCase(deleteAlbum.fulfilled, (state) => {
+        state.tracks = [];
+      })
+
+      .addCase(deleteTrack.fulfilled, (state) => {
+        state.tracks = [];
+      });
   },
 
   selectors: {
@@ -79,8 +98,13 @@ const musicSlice = createSlice({
     tracks: state => state.tracks,
     isLoading: state => state.loading,
   }
-})
-
+});
 
 export const musicReducer = musicSlice.reducer;
-export const {artists, albums, tracks, isLoading} = musicSlice.selectors;
+
+export const {
+  artists,
+  albums,
+  tracks,
+  isLoading
+} = musicSlice.selectors;

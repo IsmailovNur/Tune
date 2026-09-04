@@ -50,28 +50,32 @@ const run = async () => {
       title: '1989 (Taylor\'s Version)',
       artist: artist1._id,
       releaseYear: 2023,
-      coverImage: 'images/Taylor_Swift-1989.png'
+      coverImage: 'images/Taylor_Swift-1989.png',
+      isPublished: true
     },
 
     {
       title: 'Midnights',
       artist: artist1._id,
       releaseYear: 2022,
-      coverImage: 'images/Taylor_Swift-Midnights.png'
+      coverImage: 'images/Taylor_Swift-Midnights.png',
+      isPublished: true
     },
 
     {
       title: 'After Hours',
       artist: artist2._id,
       releaseYear: 2020,
-      coverImage: 'images/The_Weeknd-After_Hours.png'
+      coverImage: 'images/The_Weeknd-After_Hours.png',
+      isPublished: true
     },
 
     {
       title: 'Starboy',
       artist: artist2._id,
       releaseYear: 2016,
-      coverImage: 'images/The_Weeknd-Starboy.png'
+      coverImage: 'images/The_Weeknd-Starboy.png',
+      isPublished: true
     },
 
     {

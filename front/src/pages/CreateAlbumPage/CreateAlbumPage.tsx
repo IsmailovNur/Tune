@@ -18,7 +18,6 @@ import { createAlbum, fetchArtists } from "../../entities/Music/musicThunk.ts";
 import { artists } from "../../entities/Music/musicSlice.ts";
 
 export const CreateAlbumPage = () => {
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -32,9 +31,8 @@ export const CreateAlbumPage = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchArtists())
-  }, [dispatch])
-
+    dispatch(fetchArtists());
+  }, [dispatch]);
 
   const submitHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -54,37 +52,58 @@ export const CreateAlbumPage = () => {
       return;
     }
 
+    const releaseYear = Number(album.releaseYear);
+
+    if (
+      !Number.isInteger(releaseYear) ||
+      releaseYear < 0
+    ) {
+      toast.error(
+        "Release year must be a non-negative integer!"
+      );
+      return;
+    }
+
     try {
       await dispatch(
         createAlbum({
-          title: album.title,
+          title: album.title.trim(),
           artist: album.artist,
-          releaseYear: Number(album.releaseYear),
+          releaseYear,
           coverImage: album.coverImage,
         })
-      )
+      ).unwrap();
 
-      toast.success("Album album created!");
+      toast.success("Album created!");
+
       navigate(AppRoutes.main);
-
     } catch (error) {
       toast.error("Failed to create album!");
     }
-  }
+  };
 
-  const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
     const {name, value} = e.target;
+
+    if (
+      name === "releaseYear" &&
+      value &&
+      Number(value) < 0
+    ) {
+      return;
+    }
 
     setAlbum((prevState) => ({
       ...prevState,
       [name]: value
     }));
-  }
+  };
 
   return (
     <Box sx={{maxWidth: 500, mx: "auto", mt: 4}}>
       <Paper sx={{p: 4}} variant="outlined">
-
         <Typography
           variant="h5"
           sx={{mb: 4}}
@@ -95,7 +114,11 @@ export const CreateAlbumPage = () => {
         <Box
           component="form"
           onSubmit={submitHandler}
-          sx={{display: "flex", flexDirection: "column", gap: 3}}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3
+          }}
         >
           <TextField
             label="Title"
@@ -104,7 +127,7 @@ export const CreateAlbumPage = () => {
             onChange={inputChangeHandler}
           />
 
-          <FormControl>
+          <FormControl fullWidth>
             <InputLabel>Artist</InputLabel>
 
             <Select
@@ -134,6 +157,12 @@ export const CreateAlbumPage = () => {
             type="number"
             value={album.releaseYear}
             onChange={inputChangeHandler}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                step: 1,
+              },
+            }}
           />
 
           <Button
@@ -149,7 +178,8 @@ export const CreateAlbumPage = () => {
               onChange={(e) =>
                 setAlbum((prevState) => ({
                   ...prevState,
-                  coverImage: e.target.files?.[0] || null
+                  coverImage:
+                    e.target.files?.[0] || null
                 }))
               }
             />

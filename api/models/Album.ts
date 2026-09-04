@@ -14,6 +14,11 @@ const AlbumSchema = new Schema<IAlbum>({
   releaseYear: {
     type: Number,
     required: true,
+    min: 0,
+    validate: {
+      validator: Number.isInteger,
+      message: "Release year must be an integer!",
+    },
   },
   coverImage: {
     type: String,
@@ -25,6 +30,5 @@ const AlbumSchema = new Schema<IAlbum>({
     default: false,
   },
 });
-
 
 export const Album = model<IAlbum>('Album', AlbumSchema);

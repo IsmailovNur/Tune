@@ -1,10 +1,20 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { useNavigate } from "react-router-dom";
-import React, { type ChangeEvent, useEffect, useState } from "react";
+import React, {
+  type ChangeEvent,
+  useEffect,
+  useState
+} from "react";
 import { toast } from "react-toastify";
-import { createTrack, fetchAlbums } from "../../entities/Music/musicThunk.ts";
+import {
+  createTrack,
+  fetchAlbums
+} from "../../entities/Music/musicThunk.ts";
 import { AppRoutes } from "../../routing/routes.ts";
-import { albums } from "../../entities/Music/musicSlice.ts";
+import {
+  albums,
+  isLoading
+} from "../../entities/Music/musicSlice.ts";
 import {
   Box,
   Button,
@@ -18,10 +28,11 @@ import {
 } from "@mui/material";
 
 export const CreateTrackPage = () => {
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const albumsData = useAppSelector(albums);
+  const loading = useAppSelector(isLoading);
 
   const [track, setTrack] = useState({
     title: "",
@@ -34,11 +45,9 @@ export const CreateTrackPage = () => {
     dispatch(fetchAlbums());
   }, [dispatch]);
 
-  const albumsData = useAppSelector(albums);
-  console.log(albumsData);
-
-
-  const submitHandler = async (e: React.SubmitEvent) => {
+  const submitHandler = async (
+    e: React.SubmitEvent
+  ) => {
     e.preventDefault();
 
     if (!track.title.trim()) {
@@ -56,43 +65,50 @@ export const CreateTrackPage = () => {
       return;
     }
 
-    if (!track.trackNumber) {
-      toast.error("Track number is required!");
+    const trackNumber = Number(track.trackNumber);
+
+    if (
+      !Number.isInteger(trackNumber) ||
+      trackNumber < 1
+    ) {
+      toast.error(
+        "Track number must be a positive integer!"
+      );
       return;
     }
 
     try {
       await dispatch(
         createTrack({
-          title: track.title,
+          title: track.title.trim(),
           album: track.album,
-          duration: track.duration,
-          trackNumber: Number(track.trackNumber),
+          duration: track.duration.trim(),
+          trackNumber,
         })
       ).unwrap();
 
       toast.success("Track created!");
+
       navigate(AppRoutes.main);
-
     } catch (error) {
-      toast.error("Failed to create album!");
+      toast.error("Failed to create track!");
     }
-  }
+  };
 
-  const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
     const {name, value} = e.target;
 
     setTrack((prevState) => ({
       ...prevState,
       [name]: value
     }));
-  }
-
+  };
 
   return (
     <Box sx={{maxWidth: 500, mx: "auto", mt: 4}}>
       <Paper sx={{p: 4}} variant="outlined">
-
         <Typography
           variant="h5"
           sx={{mb: 4}}
@@ -116,7 +132,7 @@ export const CreateTrackPage = () => {
             onChange={inputChangeHandler}
           />
 
-          <FormControl>
+          <FormControl fullWidth>
             <InputLabel>Album</InputLabel>
 
             <Select
@@ -128,19 +144,28 @@ export const CreateTrackPage = () => {
                   album: e.target.value
                 }))
               }
+              disabled={loading}
             >
               {albumsData.map((album) => (
                 <MenuItem
                   key={album._id}
                   value={album._id}
                 >
-                  <Box sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between"
-                  }}>
-                    <Typography>{album.title}</Typography>
-                    <Typography color="info">{album.artist.name}</Typography>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between"
+                    }}
+                  >
+                    <Typography>
+                      {album.title}
+                    </Typography>
+
+                    <Typography color="info">
+                      {album.artist?.name ??
+                        "Unknown Artist"}
+                    </Typography>
                   </Box>
                 </MenuItem>
               ))}
@@ -160,11 +185,18 @@ export const CreateTrackPage = () => {
             type="number"
             value={track.trackNumber}
             onChange={inputChangeHandler}
+            slotProps={{
+              htmlInput: {
+                min: 1,
+                step: 1,
+              },
+            }}
           />
 
           <Button
             type="submit"
             variant="contained"
+            loading={loading}
           >
             Add Track
           </Button>
